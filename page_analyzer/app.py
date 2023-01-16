@@ -35,9 +35,9 @@ def url_check(id):
         res = {"status_code": response.status_code}
         res.update(get_page_data(response.content.decode()))
         repo.save(id, **res)
-        flash("Site checked successful!", "success")
+        flash("Страница успешно проверена", "success")
     except Exception as ex:
-        flash(f"Trouble while checking site: {ex=}", "danger")
+        flash("Произошла ошибка при проверке", "danger")
 
     return redirect(url_for("show", id=id))
 
@@ -60,16 +60,17 @@ def post_urls():
     data = request.form.get("url")
 
     if not data or not validators.url(data) or len(data) > 255:
-        flash("URL is not valid, please enter valid url", "danger")
+        flash("Некорректный URL", "danger")
         return redirect("/")
 
     try:
         repo = URLRepository()
         found_record = repo.find_by_name(data)
         if found_record:
-            flash("URL already exists", "info")
+            flash("Страница уже существует", "info")
             return redirect(url_for("show", id=found_record.get("id")))
-
+        
+        flash('Страница успешно добавлена', 'success')
         return redirect(url_for("show", id=repo.save({"name": data})))
     except Exception as ex:
         flash(f"Error while store url {ex=}", "danger")
