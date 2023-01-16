@@ -2,10 +2,12 @@ import validators
 import os
 import secrets
 from flask import Flask, render_template, request, flash, redirect, url_for, abort
-from .db import URLRepository
+from .db import URLRepository, URLCheckRepository
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', secrets.token_urlsafe(16))
+
+
 
 @app.route('/')
 def index():
@@ -18,6 +20,13 @@ def urls():
     return render_template('sites.html', records=records)
 
 
+@app.route('/urls/<int:id>/checks', methods=["POST"])
+def url_check(id):
+    repo = URLCheckRepository()
+    repo.save(id)
+
+    return redirect(url_for('show', id=id))
+
 @app.route('/urls/<int:id>', methods=['GET'])
 def show(id):
     repo = URLRepository()
@@ -25,8 +34,10 @@ def show(id):
 
     if not record:
         return abort(404)
+
+    checks = URLCheckRepository().find_all(id)
     
-    return render_template('page.html', record=record)
+    return render_template('page.html', record=record, checks=checks)
 
 
 @app.route('/urls', methods=['POST'])
@@ -49,6 +60,6 @@ def post_urls():
             flash("URL already exists", 'info')
             return redirect(url_for('show', id=found_record.get('id')))
 
-        return redirect(url_for('show', id = repo.save({'name': data})))
+        return redirect(url_for('show', id=repo.save({'name': data})))
     except Exception as ex:
         return abort(500, ex)
