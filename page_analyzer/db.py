@@ -60,17 +60,17 @@ class URLRepository():
 
 
 class URLCheckRepository():
-    def save(self, url_id):
+    def save(self, url_id, status_code=0):
         with get_connection() as connection:
             with connection.cursor() as cursor:
-                cursor.execute('insert into url_checks(url_id, created_at) values(%s, %s)', (url_id, str(datetime.datetime.now())))
+                cursor.execute('insert into url_checks(url_id, created_at, status_code) values(%s, %s, %s)', (url_id, str(datetime.datetime.now()), status_code))
                 connection.commit()
                 cursor.close()
 
     def find_all(self, url_id):
         with get_connection() as connection:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
-                cursor.execute('select * from url_checks where url_id=%s', (url_id, ))
+                cursor.execute('select * from url_checks where url_id=%s order by created_at desc', (url_id, ))
                 records = cursor.fetchall()
                 cursor.close()
                 return records

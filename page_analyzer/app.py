@@ -1,5 +1,6 @@
 import validators
 import os
+import requests
 import secrets
 from flask import Flask, render_template, request, flash, redirect, url_for, abort
 from .db import URLRepository, URLCheckRepository
@@ -22,8 +23,18 @@ def urls():
 
 @app.route('/urls/<int:id>/checks', methods=["POST"])
 def url_check(id):
-    repo = URLCheckRepository()
-    repo.save(id)
+    site_for_check = URLRepository().find(id)
+    
+    if not site_for_check:
+        abort(404)
+    try:
+        response = requests.get(site_for_check.get('name'))
+        response.raise_for_status()
+        repo = URLCheckRepository()
+        repo.save(id, response.status_code)
+        flash(f"Site checked successful!", "success")
+    except Exception as ex:
+        flash(f"Trouble while checking site", 'danger')
 
     return redirect(url_for('show', id=id))
 
