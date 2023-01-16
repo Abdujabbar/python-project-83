@@ -77,13 +77,13 @@ class URLCheckRepository:
                 cursor.execute(
                     """
                     insert into
-                        url_checks(
-                            url_id,
-                            created_at,
-                            status_code,
-                            h1,
-                            title,
-                            description)
+                    url_checks(
+                        url_id,
+                        created_at,
+                        status_code,
+                        h1,
+                        title,
+                        description)
                         values(%s, %s, %s, %s, %s, %s)""",
                     (
                         url_id,

@@ -76,4 +76,5 @@ def post_urls():
 
         return redirect(url_for("show", id=repo.save({"name": data})))
     except Exception as ex:
-        return abort(500, ex)
+        flash(f"Error while store url {ex=}", "danger")
+        return redirect("/")
