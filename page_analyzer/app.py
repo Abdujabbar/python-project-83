@@ -61,7 +61,7 @@ def post_urls():
 
     if not data or not validators.url(data) or len(data) > 255:
         flash("Некорректный URL", "danger")
-        return redirect("/")
+        return redirect("/", 422)
 
     try:
         repo = URLRepository()
