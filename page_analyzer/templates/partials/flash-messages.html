@@ -1,7 +1,7 @@
-{% with messages = get_flashed_messages(1) %}
-{%  if  messages %}
-{%  for  message  in  messages %} 
-    <p class="alert alert-{{message[0]}}">{{ message[1] }}</p>
-{% endfor %}
-{% endif %}
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {%  if  messages %}
+        {%  for cateory, message  in  messages %} 
+            <p class="alert alert-{{cateory}}">{{ message }}</p>
+        {% endfor %}
+    {% endif %}
 {% endwith %}

@@ -36,7 +36,7 @@ def url_check(id):
         res.update(get_page_data(response.content.decode()))
         repo.save(id, **res)
         flash("Страница успешно проверена", "success")
-    except Exception as ex:
+    except Exception:
         flash("Произошла ошибка при проверке", "danger")
 
     return redirect(url_for("show", id=id))
@@ -69,7 +69,7 @@ def post_urls():
         if found_record:
             flash("Страница уже существует", "info")
             return redirect(url_for("show", id=found_record.get("id")))
-        
+
         flash('Страница успешно добавлена', 'success')
         return redirect(url_for("show", id=repo.save({"name": data})))
     except Exception as ex:
