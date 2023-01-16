@@ -59,11 +59,7 @@ def show(id):
 def post_urls():
     data = request.form.get("url")
 
-    if not data:
-        flash("URL is required", "danger")
-        return redirect("/")
-
-    if not validators.url(data) or len(data) > 255:
+    if not data or not validators.url(data) or len(data) > 255:
         flash("URL is not valid, please enter valid url", "danger")
         return redirect("/")
 
