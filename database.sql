@@ -4,12 +4,13 @@ create table urls(
     created_at timestamp default now()
 );
 
-create table url_checks(
-    id bigint primary key generated always as identity, 
-    url_id bigint, 
-    status_code int,
-    h1 VARCHAR(512),
-    title VARCHAR(512), 
-    description VARCHAR(512), 
-    created_at timestamp default now()
-)
+CREATE TABLE "url_checks" (
+    id bigint primary key generated always as identity,
+    "url_id" int8,
+    "status_code" int4,
+    "h1" varchar(512),
+    "title" varchar(512),
+    "description" varchar(512),
+    "created_at" timestamp DEFAULT now(),
+    CONSTRAINT "url_checks_url_id_fkey" FOREIGN KEY ("url_id") REFERENCES "urls"("id")
+);
