@@ -29,8 +29,6 @@ class URLRepository:
                     (data.get("name"), str(datetime.datetime.now())),
                 )
                 record = cursor.fetchone()
-                connection.commit()
-                cursor.close()
             return record[0]
 
     def find_by_name(self, name):
@@ -38,7 +36,6 @@ class URLRepository:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
                 cursor.execute("select * from urls where name=%s", (name,))
                 record = cursor.fetchone()
-                cursor.close()
                 return record
 
     def find(self, id):
@@ -46,7 +43,6 @@ class URLRepository:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
                 cursor.execute("select * from urls where id=%s", (id,))
                 record = cursor.fetchone()
-                cursor.close()
                 return record
 
     def find_all(self, limit=10, offset=0):
@@ -60,14 +56,12 @@ class URLRepository:
                     ),
                 )
                 records = cursor.fetchall()
-                cursor.close()
                 return records
 
     def destroy(self, id):
         with get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute("delete from urls where id=%s", (id,))
-                cursor.close()
 
 
 class URLCheckRepository:
@@ -95,9 +89,6 @@ class URLCheckRepository:
                     ),
                 )
 
-                connection.commit()
-                cursor.close()
-
     def find_all(self, url_id):
         with get_connection() as connection:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
@@ -108,5 +99,4 @@ class URLCheckRepository:
                     (url_id,),
                 )
                 records = cursor.fetchall()
-                cursor.close()
                 return records
