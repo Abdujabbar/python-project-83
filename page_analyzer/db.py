@@ -3,6 +3,9 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import datetime
 import contextlib
+from dotenv import load_dotenv
+
+load_dotenv()
 
 connection_path = os.getenv(
     "DATABASE_URL",
