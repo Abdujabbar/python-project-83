@@ -6,7 +6,8 @@ from flask import Flask, \
     render_template, request, flash, redirect, url_for, abort
 from .db import URLRepository, URLCheckRepository
 from .page import get_page_data
-
+from dotenv import load_dotenv
+load_dotenv()
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", secrets.token_urlsafe(16))
 
