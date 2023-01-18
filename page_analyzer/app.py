@@ -22,6 +22,28 @@ def urls():
     return render_template("sites.html", records=records)
 
 
+@app.route("/urls", methods=["POST"])
+def post_urls():
+    data = request.form.get("url")
+
+    if not data or not validators.url(data) or len(data) > 255:
+        flash("Некорректный URL", "danger")
+        return render_template('index.html'), 422
+
+    try:
+        repo = URLRepository()
+        found_record = repo.find_by_name(data)
+        if found_record:
+            flash("Страница уже существует", "info")
+            return redirect(url_for("show", id=found_record.get("id")))
+
+        flash('Страница успешно добавлена', 'success')
+        return redirect(url_for("show", id=repo.save({"name": data})))
+    except Exception as ex:
+        flash(f"Error while store url {ex=}", "danger")
+        return redirect("/")
+
+
 @app.route("/urls/<int:id>", methods=["GET"])
 def show(id):
     repo = URLRepository()
@@ -53,25 +75,3 @@ def url_check(id):
         flash("Произошла ошибка при проверке", "danger")
 
     return redirect(url_for("show", id=id))
-
-
-@app.route("/urls", methods=["POST"])
-def post_urls():
-    data = request.form.get("url")
-
-    if not data or not validators.url(data) or len(data) > 255:
-        flash("Некорректный URL", "danger")
-        return render_template('index.html'), 422
-
-    try:
-        repo = URLRepository()
-        found_record = repo.find_by_name(data)
-        if found_record:
-            flash("Страница уже существует", "info")
-            return redirect(url_for("show", id=found_record.get("id")))
-
-        flash('Страница успешно добавлена', 'success')
-        return redirect(url_for("show", id=repo.save({"name": data})))
-    except Exception as ex:
-        flash(f"Error while store url {ex=}", "danger")
-        return redirect("/")
