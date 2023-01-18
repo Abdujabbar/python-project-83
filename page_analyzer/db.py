@@ -57,9 +57,11 @@ class URLRepository:
                 cursor.execute(
                     """select * from urls
                     join (
-                    select url_id, created_at as check_at, status_code from url_checks where id in(
+                    select url_id, created_at as check_at,
+                    status_code from url_checks where id in(
                     select max(id) from url_checks
-                    group by url_id)) as latest_check on latest_check.url_id = urls.id
+                    group by url_id))
+                    as latest_check on latest_check.url_id = urls.id
                     limit %s offset %s""",
                     (
                         limit,

@@ -14,8 +14,8 @@ def get_page_data(content):
             continue
 
         res[search_tag] = (
-            found_node.get_text() or
-            found_node.attrs.get("content", "")
+            found_node.get_text()
+            or found_node.attrs.get("content", "")
         )
 
     return res
