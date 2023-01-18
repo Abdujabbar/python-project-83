@@ -3,8 +3,6 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import datetime
 import contextlib
-from dotenv import load_dotenv
-load_dotenv()
 
 connection_path = os.getenv(
     "DATABASE_URL",
@@ -31,6 +29,7 @@ class URLRepository:
                     (data.get("name"), str(datetime.datetime.now())),
                 )
                 record = cursor.fetchone()
+                connection.commit()
             return record[0]
 
     def find_by_name(self, name):
@@ -38,6 +37,7 @@ class URLRepository:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
                 cursor.execute("select * from urls where name=%s", (name,))
                 record = cursor.fetchone()
+                cursor.close()
                 return record
 
     def find(self, id):
@@ -45,6 +45,7 @@ class URLRepository:
             with connection.cursor(cursor_factory=RealDictCursor) as cursor:
                 cursor.execute("select * from urls where id=%s", (id,))
                 record = cursor.fetchone()
+                cursor.close()
                 return record
 
     def find_all(self, limit=10, offset=0):
@@ -64,6 +65,7 @@ class URLRepository:
         with get_connection() as connection:
             with connection.cursor() as cursor:
                 cursor.execute("delete from urls where id=%s", (id,))
+                connection.commit()
 
 
 class URLCheckRepository:
@@ -90,6 +92,8 @@ class URLCheckRepository:
                         kwargs.get("description", ""),
                     ),
                 )
+
+                connection.commit()
 
     def find_all(self, url_id):
         with get_connection() as connection:
