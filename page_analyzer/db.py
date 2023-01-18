@@ -92,7 +92,7 @@ class URLCheckRepository:
                         kwargs.get("status_code", ""),
                         kwargs.get("h1", ""),
                         kwargs.get("title", ""),
-                        kwargs.get("description", ""),
+                        kwargs.get("meta", ""),
                     ),
                 )
 
