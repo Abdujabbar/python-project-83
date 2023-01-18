@@ -22,6 +22,19 @@ def urls():
     return render_template("sites.html", records=records)
 
 
+@app.route("/urls/<int:id>", methods=["GET"])
+def show(id):
+    repo = URLRepository()
+    record = repo.find(id)
+
+    if not record:
+        return abort(404)
+
+    checks = URLCheckRepository().find_all(id)
+
+    return render_template("page.html", record=record, checks=checks)
+
+
 @app.route("/urls/<int:id>/checks", methods=["POST"])
 def url_check(id):
     site_for_check = URLRepository().find(id)
@@ -40,19 +53,6 @@ def url_check(id):
         flash("Произошла ошибка при проверке", "danger")
 
     return redirect(url_for("show", id=id))
-
-
-@app.route("/urls/<int:id>", methods=["GET"])
-def show(id):
-    repo = URLRepository()
-    record = repo.find(id)
-
-    if not record:
-        return abort(404)
-
-    checks = URLCheckRepository().find_all(id)
-
-    return render_template("page.html", record=record, checks=checks)
 
 
 @app.route("/urls", methods=["POST"])
