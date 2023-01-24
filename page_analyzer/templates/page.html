@@ -25,7 +25,7 @@
 </div>
 
   <h2 class="mt-5 mb-3">Проверки</h2>
-  <form method="post" action="/urls/{{record.id}}/checks">
+  <form method="post" action="{{url_for('url_check', id=record.id)}}">
   <input type="submit" class="btn btn-primary" value="Запустить проверку">
   </form>
   

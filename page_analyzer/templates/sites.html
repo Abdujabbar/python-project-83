@@ -18,7 +18,7 @@
       <tr>
         <td>{{record.id}}</td>
         <td>
-          <a href="/urls/{{record.id}}">
+          <a href="{{url_for('show', id=record.id)}}">
             {{record.name}}
           </a>
         </td>
